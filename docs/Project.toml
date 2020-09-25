@@ -1,0 +1,4 @@
+[deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+DuneIstlSolvers = "e904836c-cba4-4c6f-9d10-b9ca3d4a7580"
+duneistl_julia_jll = "228c9359-a2f9-5b9c-be5b-bc96acd46855"

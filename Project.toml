@@ -1,0 +1,17 @@
+name = "DuneIstlSolvers"
+uuid = "e904836c-cba4-4c6f-9d10-b9ca3d4a7580"
+authors = ["Yimin Liu <yiminliu1992@gmail.com> and contributors"]
+version = "0.1.0"
+
+[deps]
+CxxWrap = "1f15a43c-97ca-5a2a-ae31-89f07a497df4"
+duneistl_julia_jll = "228c9359-a2f9-5b9c-be5b-bc96acd46855"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Home · DuneIstlSolvers.jl</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script><link href="assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="https://fonts.googleapis.com/css?family=Montserrat|Source+Code+Pro&amp;display=swap" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit">DuneIstlSolvers.jl</span></div><form class="docs-search" action="search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li class="is-active"><a class="tocitem" href>Home</a><ul class="internal"><li><a class="tocitem" href="#Installation"><span>Installation</span></a></li><li><a class="tocitem" href="#Usage"><span>Usage</span></a></li><li><a class="tocitem" href="#Instantiated-matrices,-solvers-and-preconditioners"><span>Instantiated matrices, solvers and preconditioners</span></a></li><li><a class="tocitem" href="#Supported-platforms"><span>Supported platforms</span></a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Home</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Home</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/DeanLym/DuneIstlSolvers.jl/blob/master/docs/src/index.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="DuneIstlSolvers.jl"><a class="docs-heading-anchor" href="#DuneIstlSolvers.jl">DuneIstlSolvers.jl</a><a id="DuneIstlSolvers.jl-1"></a><a class="docs-heading-anchor-permalink" href="#DuneIstlSolvers.jl" title="Permalink"></a></h1><p>A Julia wrapper for using BCSR matrices, iterative solvers and preconditioners from the <a href="https://dune-project.org/modules/dune-istl/">ISTL (v2.7.0)</a> (iterative solver template library) module of <a href="https://dune-project.org/">DUNE (v2.7.0)</a> (the Distributed and Unified Numerics Environment). Documentation of <code>DUNE (v2.7.0)</code> is available <a href="https://dune-project.org/doxygen/2.7.0/">here</a>;</p><h2 id="Installation"><a class="docs-heading-anchor" href="#Installation">Installation</a><a id="Installation-1"></a><a class="docs-heading-anchor-permalink" href="#Installation" title="Permalink"></a></h2><p><code>DuneIstlSolvers.jl</code> is unregistered for now. In addition, the dependent <code>JLL</code> package <a href="https://github.com/DeanLym/libduneistlsolver_jll.jl"><code>libduneistlsolver_jll.jl</code></a> is also unregistered.</p><p>Therefore, to install, we need to first manually add <code>libduneistlsolver_jll.jl</code>:</p><pre><code class="language-julia">] add https://github.com/DeanLym/libduneistlsolver_jll.jl.git</code></pre><p>Next, install <code>DuneIstlSolvers.jl</code> with</p><pre><code class="language-julia">] add https://github.com/DeanLym/DuneIstlSolver.git</code></pre><h2 id="Usage"><a class="docs-heading-anchor" href="#Usage">Usage</a><a id="Usage-1"></a><a class="docs-heading-anchor-permalink" href="#Usage" title="Permalink"></a></h2><pre><code class="language-julia">using DuneIstlSolvers
+## create a solver for 3x3 BCSR matrix with block size 2
+n = 3
+solver = DuneIstlSolver{Float64, Int32(2)}(n)
+print_matrix(solver)</code></pre><pre class="documenter-example-output">random [n=3,m=3,rowdim=6,coldim=6]
+    0          .          .          .          .          .          .
+    1          .          .          .          .          .          .
+    2          .          .          .          .          .          .
+    3          .          .          .          .          .          .
+    4          .          .          .          .          .          .
+    5          .          .          .          .          .          .</pre><pre><code class="language-julia">## add non-zero blocks to the BCSR matrix
+row_size = Int32.([1, 1, 1])
+nnz = sum(row_size)
+BI = Int32.([1, 2, 3]) # one-based indexing
+BJ = copy(BI)
+construct_matrix(solver, nnz, row_size, BI, BJ)
+print_matrix(solver)</code></pre><pre class="documenter-example-output">random [n=3,m=3,rowdim=6,coldim=6]
+    0   0.00e+00   0.00e+00          .          .          .          .
+    1   0.00e+00   0.00e+00          .          .          .          .
+    2          .          .   0.00e+00   0.00e+00          .          .
+    3          .          .   0.00e+00   0.00e+00          .          .
+    4          .          .          .          .   0.00e+00   0.00e+00
+    5          .          .          .          .   0.00e+00   0.00e+00</pre><pre><code class="language-julia">## Add value to the BCSR matrix
+V1 = [1.0, 2.0, 3.0]
+add_value_matrix(solver, nnz, BI, BJ, 1, 1, V1)
+add_value_matrix(solver, nnz, BI, BJ, 2, 2, V1)
+print_matrix(solver)</code></pre><pre class="documenter-example-output">random [n=3,m=3,rowdim=6,coldim=6]
+    0   1.00e+00   0.00e+00          .          .          .          .
+    1   0.00e+00   1.00e+00          .          .          .          .
+    2          .          .   2.00e+00   0.00e+00          .          .
+    3          .          .   0.00e+00   2.00e+00          .          .
+    4          .          .          .          .   3.00e+00   0.00e+00
+    5          .          .          .          .   0.00e+00   3.00e+00</pre><pre><code class="language-julia">## Add value to the RHS vector
+V2 = [2.0, 4.0, 6.0]
+add_value_rhs(solver, n, BI, 1, V2)
+add_value_rhs(solver, n, BI, 2, V2)
+print_rhs(solver)</code></pre><pre class="documenter-example-output">rhs [blocks=3,dimension=6]
+    0   2.00e+00
+    1   2.00e+00
+    2   4.00e+00
+    3   4.00e+00
+    4   6.00e+00
+    5   6.00e+00</pre><pre><code class="language-julia">## Get default settings for the iterative solver
+println(&quot;Solver type: &quot;, get_solver_type(solver))
+println(&quot;Target reduction: &quot;, get_target_reduction(solver))
+println(&quot;Maximum iterations:&quot;, get_max_iter(solver))</code></pre><pre class="documenter-example-output">Solver type: BiCGSTAB
+Target reduction: 0.01
+Maximum iterations:50</pre><pre><code class="language-julia">## Get default settings for the preconditioner
+println(&quot;Preconditioner type: &quot;, get_preconditioner_type(solver))
+println(&quot;Preconditioner relax: &quot;, get_preconditioner_relax(solver))
+println(&quot;ILU order: &quot;, get_ilu_n(solver))</code></pre><pre class="documenter-example-output">Preconditioner type: ILU
+Preconditioner relax: 1.2
+ILU order: 0</pre><pre><code class="language-julia">## Solve the linear equation
+set_verbose(solver, 2)
+solve(solver)</code></pre><pre class="documenter-example-output">=== Dune::BiCGSTABSolver
+ Iter          Defect            Rate
+    0           10.583
+  0.5      1.88411e-15      1.78032e-16
+=== rate=3.16953e-32, T=7.9997e-05, TIT=inf, IT=0</pre><pre><code class="language-julia">## Get solution
+x = zeros(Float64, 2*n)
+get_solution(solver, x)
+x</code></pre><pre class="documenter-example-output">6-element Array{Float64,1}:
+ 2.0000000000000004
+ 2.0000000000000004
+ 2.0000000000000004
+ 2.0000000000000004
+ 2.0000000000000004
+ 2.0000000000000004</pre><pre><code class="language-julia">## Get statistics
+println(&quot;Number of iterations: &quot;, get_iterations(solver))
+println(&quot;Solver converged: &quot;, get_converged(solver))
+println(&quot;Final relative reduction: &quot;, get_reduction(solver))
+println(&quot;Time elapsed: &quot;, get_elapsed(solver), &quot;s&quot;)</code></pre><pre class="documenter-example-output">Number of iterations: 0
+Solver converged: true
+Final relative reduction: 1.7803175061665246e-16
+Time elapsed: 7.9997e-5s</pre><h2 id="Instantiated-matrices,-solvers-and-preconditioners"><a class="docs-heading-anchor" href="#Instantiated-matrices,-solvers-and-preconditioners">Instantiated matrices, solvers and preconditioners</a><a id="Instantiated-matrices,-solvers-and-preconditioners-1"></a><a class="docs-heading-anchor-permalink" href="#Instantiated-matrices,-solvers-and-preconditioners" title="Permalink"></a></h2><p>For now, only a few matrices, solvers and preconditioners are supported. More will be added in future releases.</p><h3 id="Matrices"><a class="docs-heading-anchor" href="#Matrices">Matrices</a><a id="Matrices-1"></a><a class="docs-heading-anchor-permalink" href="#Matrices" title="Permalink"></a></h3><p>At the time being, BCRS matrices with 1) square block of size <code>1-4</code>, 2) element type of <code>float</code> and <code>double</code> are supported.</p><table><tr><th style="text-align: center">Dune Type</th><th style="text-align: center">Julia Usage</th></tr><tr><td style="text-align: center"><code>Dune::BCRSMatrix&lt;Dune::FieldMatrix&lt;double,1,1&gt;&gt;</code></td><td style="text-align: center"><code>DuneIstlSolver{Float64, Int32(1)}</code></td></tr><tr><td style="text-align: center"><code>Dune::BCRSMatrix&lt;Dune::FieldMatrix&lt;double,2,2&gt;&gt;</code></td><td style="text-align: center"><code>DuneIstlSolver{Float64, Int32(2)}</code></td></tr><tr><td style="text-align: center"><code>Dune::BCRSMatrix&lt;Dune::FieldMatrix&lt;double,3,3&gt;&gt;</code></td><td style="text-align: center"><code>DuneIstlSolver{Float64, Int32(3)}</code></td></tr><tr><td style="text-align: center"><code>Dune::BCRSMatrix&lt;Dune::FieldMatrix&lt;double,4,4&gt;&gt;</code></td><td style="text-align: center"><code>DuneIstlSolver{Float64, Int32(4)}</code></td></tr><tr><td style="text-align: center"><code>Dune::BCRSMatrix&lt;Dune::FieldMatrix&lt;float,1,1&gt;&gt;</code></td><td style="text-align: center"><code>DuneIstlSolver{Float32, Int32(1)}</code></td></tr><tr><td style="text-align: center"><code>Dune::BCRSMatrix&lt;Dune::FieldMatrix&lt;float,2,2&gt;&gt;</code></td><td style="text-align: center"><code>DuneIstlSolver{Float32, Int32(2)}</code></td></tr><tr><td style="text-align: center"><code>Dune::BCRSMatrix&lt;Dune::FieldMatrix&lt;float,3,3&gt;&gt;</code></td><td style="text-align: center"><code>DuneIstlSolver{Float32, Int32(3)}</code></td></tr><tr><td style="text-align: center"><code>Dune::BCRSMatrix&lt;Dune::FieldMatrix&lt;float,4,4&gt;&gt;</code></td><td style="text-align: center"><code>DuneIstlSolver{Float32, Int32(4)}</code></td></tr></table><h3 id="Solvers"><a class="docs-heading-anchor" href="#Solvers">Solvers</a><a id="Solvers-1"></a><a class="docs-heading-anchor-permalink" href="#Solvers" title="Permalink"></a></h3><p>At the time being, only the <code>BiCGSTAB</code> and <code>GMRes</code> solvers are supported.</p><table><tr><th style="text-align: center">Dune Type</th><th style="text-align: center">Julia Usage</th></tr><tr><td style="text-align: center"><code>Dune::BiCGSTABSolver</code></td><td style="text-align: center"><code>set_solver_type(solver, &quot;BiCGSTAB&quot;)</code></td></tr><tr><td style="text-align: center"><code>Dune::RestartedGMResSolver</code></td><td style="text-align: center"><code>set_solver_type(solver, &quot;RestartedGMRes&quot;)</code></td></tr></table><h3 id="Preconditioners"><a class="docs-heading-anchor" href="#Preconditioners">Preconditioners</a><a id="Preconditioners-1"></a><a class="docs-heading-anchor-permalink" href="#Preconditioners" title="Permalink"></a></h3><p>At the time being, only the incomplete LU preconditioner is supported.</p><table><tr><th style="text-align: center">Dune Type</th><th style="text-align: center">Julia Usage</th></tr><tr><td style="text-align: center"><code>Dune::SeqILU</code></td><td style="text-align: center"><code>set_preconditioner_type(solver, &quot;ILU&quot;)</code></td></tr></table><h2 id="Supported-platforms"><a class="docs-heading-anchor" href="#Supported-platforms">Supported platforms</a><a id="Supported-platforms-1"></a><a class="docs-heading-anchor-permalink" href="#Supported-platforms" title="Permalink"></a></h2><p><code>DuneIstlSolvers.jl</code> can be used on platforms that are supported by <a href="https://github.com/DeanLym/libduneistlsolver_jll.jl"><code>libduneistlsolver_jll.jl</code></a>.</p></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Friday 25 September 2020 03:10">Friday 25 September 2020</span>. Using Julia version 1.5.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

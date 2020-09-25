@@ -14,7 +14,7 @@ Therefore, to install, we need to first manually add `libduneistlsolver_jll.jl`:
 Next, install `DuneIstlSolvers.jl` with
 
 ```julia
-] add https://github.com/DeanLym/DuneIstlSolver.git
+] add https://github.com/DeanLym/DuneIstlSolvers.jl.git
 ```
 
 ## Usage

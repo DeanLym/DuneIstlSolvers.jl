@@ -1,5 +1,8 @@
 # DuneIstlSolvers.jl
 
+[![Build Status](https://travis-ci.com/DeanLym/DuneIstlSolvers.jl.svg?branch=master)](https://travis-ci.com/DeanLym/DuneIstlSolvers.jl)
+
+
 A Julia wrapper for using BCSR matrices, iterative solvers and preconditioners from the [ISTL (v2.7.0)](https://dune-project.org/modules/dune-istl/) (iterative solver template library) module of [DUNE (v2.7.0)](https://dune-project.org/) (the Distributed and Unified Numerics Environment). Documentation of `DUNE (v2.7.0)` is available [here](https://dune-project.org/doxygen/2.7.0/);
 
 ## Installation
